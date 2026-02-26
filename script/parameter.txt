@@ -1,24 +1,12 @@
-(1) parameter 分区方案
-- uboot 分区:     烧写 uboot 编译出来的 uboot.img。
-- trust 分区:     烧写 uboot 编译出来的 trust.img。
-- misc 分区:      烧写 misc.img。开机检测进入 recovery 模式。（可省略）
-- boot 分区:      烧写 kernel 编译出来的 boot.img 包含 kernel 和设备树信息。
-- recovery 分区:  烧写 recovery.img。（可省略）
-- backup 分区:    预留暂时没有用。后续跟 android 一样作为 recovery 的 backup 使用。（可省略）
-- oem 分区:       给厂家使用,存放厂家的 app 或数据。只读。代替原来音箱的 data 分区。挂载在/oem 目录。（可省略）
-- rootfs 分区:    存放 buildroot 编出来的 rootfs.img 只读.
-- userdata 分区 : 存放 app 临时生成的文件或者是给最终用户使用。可读写,挂载在 /userdata 目录下。（可省略）
-
-(2) parameter 标准分区
 FIRMWARE_VER: 1.0
 MACHINE_MODEL: RK3399
 MACHINE_ID: 007
 MANUFACTURER: RK3399
 MAGIC: 0x5041524B
 ATAG: 0x00200800
-MACHINE: 0xffffffff
+MACHINE: 0xFFFFFFFF
 CHECK_MASK: 0x80
 PWR_HLD: 0,0,A,0,1
 TYPE: GPT
-CMDLINE: mtdparts=rk29xxnand:0x00002000@0x00004000(uboot),0x00002000@0x00006000(trust),0x00002000@0x00008000(misc),0x00020000@0x0000a000(boot),0x00040000@0x0002a000(recovery),0x00010000@0x0006a000(backup),0x00c00000@0x0007a000(rootfs),0x00040000@0x00c7a000(oem),-@0x00d1a000(userdata:grow)
+CMDLINE: mtdparts=rk29xxnand:0x00004000@0x00004000(uboot),0x00040000@0x00008000(boot:bootable),-@0x00048000(rootfs:grow)
 uuid:rootfs=614e0000-0000-4b53-8000-1d28000054a9

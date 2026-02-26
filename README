@@ -1,4 +1,12 @@
-# Build Rockchip
+# Build Rockchip Soc
+
+## Prepare
+```shell
+# arm
+sudo apt install bc bison build-essential cpio device-tree-compiler flex libelf-dev libncurses-dev libssl-dev lz4 make python-is-python3 gcc
+# x86
+sudo apt install bc bison build-essential cpio device-tree-compiler flex libelf-dev libncurses-dev libssl-dev lz4 make python-is-python3 gcc-aarch64-linux-gnu
+```
 
 ## Clone
 ```shell
@@ -6,6 +14,7 @@ git clone https://github.com/rockchip-linux/rkbin loader -b master --single-bran
 git clone https://github.com/rockchip-linux/u-boot uboot -b next-dev --single-branch --depth 1
 git clone https://github.com/rockchip-linux/kernel.git kernel -b develop-6.1 --single-branch --depth 1
 ```
+
 ## Download
 ```shell
 # UBoot 进入 Reload/Maskrom 模式命令: download(reboot loader) / rbrom
