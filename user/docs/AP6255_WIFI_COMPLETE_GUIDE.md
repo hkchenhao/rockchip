@@ -2674,6 +2674,23 @@ struct sdio_func {
 
 ### 4. 完整时序图
 
+mmc_pwrseq_simple_probe 中会设置 pinctrl-0 吗？
+不会。mmc_pwrseq_simple_probe 函数中没有设置 pinctrl-0。
+从代码可以看到，mmc_pwrseq_simple_probe 函数（第111-143行）只做了以下几件事：
+分配 mmc_pwrseq_simple 结构体内存
+获取 ext_clock 时钟
+获取 reset GPIO 数组
+读取 post-power-on-delay-ms 和 power-off-delay-us 属性
+注册 mmc pwrseq
+没有任何与 pinctrl 相关的操作。
+那么 pinctrl 是在哪里设置的呢？
+pinctrl-0 的设置是由 Linux 设备驱动模型核心 自动完成的，而不是在 probe 函数中手动设置。
+当设备与驱动匹配并绑定后，在调用 probe 函数之前，驱动核心会：
+解析设备树中的 pinctrl-* 属性
+自动调用 pinctrl_bind_pins() (定义在 drivers/base/pinctrl.c)
+应用默认的 pinctrl 状态（pinctrl-0 对应 "default" 状态）
+这是通过 really_probe() → pinctrl_bind_pins() 流程完成的，对所有支持 pinctrl 的设备都生效，不需要驱动程序显式调用。
+
 ```
 内核启动
     │
