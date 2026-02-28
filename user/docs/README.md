@@ -153,12 +153,15 @@
 
 ```
 rk3399/
-├── docs/                    # 文档目录 (当前位置) ← 已从 build/docs 移动
-│   ├── README.md           # 本文件 - 文档索引
-│   ├── ap6255_driver_flow.md
-│   ├── platform_device_creation_order.md
-│   ├── QUICK_START.md
-│   └── ... (其他文档)
+├── user/                    # 用户目录
+│   ├── docs/               # 文档目录 (当前位置)
+│   │   ├── README.md       # 本文件 - 文档索引
+│   │   ├── ap6255_driver_flow.md
+│   │   ├── platform_device_creation_order.md
+│   │   ├── QUICK_START.md
+│   │   └── ... (其他文档)
+│   ├── script/             # 用户脚本
+│   └── build/              # 用户编译输出
 │
 ├── kernel/                  # Linux 内核源码
 ├── uboot/                   # U-Boot 源码
@@ -216,7 +219,9 @@ Pinctrl：
 
 ### 更新记录
 
-- 2026-02-28: 移动文档目录从 `build/docs/` 到 `docs/`
+- 2026-02-28: 重命名文档目录为 `user/docs/`
+- 2026-02-28: 移动文档目录从根目录 `docs/` 到 `user/` 下
+- 2026-02-28: 移动文档目录从 `build/docs/` 到根目录 `docs/`
 - 2026-02-28: 添加 Platform Device 创建顺序详解
 - 2026-02-28: 补充 Probe 延迟机制说明
 - 2026-02-27: 初始文档创建
@@ -252,6 +257,6 @@ Pinctrl：
 
 ---
 
-**文档位置**: `/root/projects/embedded/rockchip/rk3399/docs/`
+**文档位置**: `/root/projects/embedded/rockchip/rk3399/user/docs/`
 **最后更新**: 2026-02-28
 **维护者**: Claude Code
