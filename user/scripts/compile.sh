@@ -30,7 +30,7 @@ cd -
 # Ref: https://www.cnblogs.com/solo666/p/15953768.html https://blog.csdn.net/fhy00229390/article/details/112980643)
 cd kernel
 make distclean
-make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- rockchip_linux_defconfig
+make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- rockchip_linux_defconfig [xxx.config]
 make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- menuconfig
 make ARCH=arm64 savedefconfig && mv defconfig arch/arm64/configs/rockchip_linux_defconfig
 make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- rk3399-eaidk-610.img KCFLAGS="-Wno-error" -j16
