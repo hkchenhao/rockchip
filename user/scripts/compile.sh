@@ -44,7 +44,8 @@ wget https://cdimage.ubuntu.com/ubuntu-base/releases/26.04/release/ubuntu-base-2
 sudo mkdir rootfs && sudo tar -xzpf /tmp/ubuntu-base-26.04-base-arm64.tar.gz -C rootfs
 #sudo apt-get install qemu-user-static && sudo cp /usr/bin/qemu-arm-static rootfs/usr/bin/
 sudo cp -b /etc/resolv.conf rootfs/etc/resolv.conf
-sudo mount -t proc /proc rootfs/proc && sudo mount -t sysfs /sys rootfs/sys && sudo mount -o bind /dev rootfs/dev && sudo mount -o bind /dev/pts rootfs/dev/pts && sudo chroot rootfs
+sudo mount -t proc /proc rootfs/proc && sudo mount -t sysfs /sys rootfs/sys && sudo mount -o bind /dev rootfs/dev && sudo mount -o bind /dev/pts rootfs/dev/pts
+sudo chroot rootfs
 cat << EOF
   apt update && apt upgrade
   apt install sudo vim net-tools openssh-server
