@@ -38,3 +38,21 @@ make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- modules KCFLAGS="-Wno-erro
 make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- modules_install INSTALL_MOD_PATH=../user/build/rootfs
 cp boot.img ../user/build/kernel.img
 cd -
+
+# Rootfs
+wget https://cdimage.ubuntu.com/ubuntu-base/releases/26.04/release/ubuntu-base-26.04-base-arm64.tar.gz -P /tmp
+sudo mkdir rootfs && sudo tar -xzpf /tmp/ubuntu-base-26.04-base-arm64.tar.gz -C rootfs
+#sudo apt-get install qemu-user-static && sudo cp /usr/bin/qemu-arm-static rootfs/usr/bin/
+sudo cp -b /etc/resolv.conf rootfs/etc/resolv.conf
+sudo mount -t proc /proc rootfs/proc && sudo mount -t sysfs /sys rootfs/sys && sudo mount -o bind /dev rootfs/dev && sudo mount -o bind /dev/pts rootfs/dev/pts && sudo chroot rootfs
+cat << EOF
+  apt update && apt upgrade
+  apt install sudo vim net-tools openssh-server
+  passwd root
+  rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/
+  exit
+EOF
+sudo umount rootfs/dev/pts && sudo umount rootfs/dev && sudo umount rootfs/sys && sudo umount rootfs/proc
+sudo rm -f rootfs.img && sudo mkfs.ext4 -F -L linuxroot -d rootfs rootfs.img 2048M
+sudo e2fsck -pf rootfs.img
+sudo resize2fs -M rootfs.img
