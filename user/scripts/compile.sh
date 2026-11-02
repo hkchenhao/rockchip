@@ -55,6 +55,7 @@ cat << EOF
   exit
 EOF
 sudo umount rootfs/dev/pts && sudo umount rootfs/dev && sudo umount rootfs/sys && sudo umount rootfs/proc
+sudo make -C ../kernel ARCH=arm64 modules_install INSTALL_MOD_PATH=rootfs
 sudo cp -a image/firmware/. rootfs/lib/firmware/
 sudo rm -f image/rootfs.img && sudo mkfs.ext4 -F -L linuxroot -d rootfs image/rootfs.img 1024M
 sudo e2fsck -pf image/rootfs.img
