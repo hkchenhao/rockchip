@@ -3,4 +3,3 @@ build
 kernel
 loader
 uboot
-user/build
