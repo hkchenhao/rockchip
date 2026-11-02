@@ -30,7 +30,7 @@ cd -
 # Ref: https://www.cnblogs.com/solo666/p/15953768.html https://blog.csdn.net/fhy00229390/article/details/112980643)
 cd kernel
 make distclean
-make O="$PWD/build" ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- rockchip_linux_defconfig rockchip_linux_user.config
+make O="$PWD/build/kernel" ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- rockchip_linux_defconfig rockchip_linux_user.config
 make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- menuconfig
 make ARCH=arm64 savedefconfig && mv defconfig arch/arm64/configs/rockchip_linux_defconfig
 make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- rk3399-blend.img KCFLAGS="-Wno-error" -j16
@@ -52,10 +52,10 @@ cat << EOF
   passwd root
   rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/
   mkdir -p /lib/firmware
-  cp -a user/build/firmware/. /lib/firmware/
   exit
 EOF
 sudo umount rootfs/dev/pts && sudo umount rootfs/dev && sudo umount rootfs/sys && sudo umount rootfs/proc
-sudo rm -f rootfs.img && sudo mkfs.ext4 -F -L linuxroot -d rootfs rootfs.img 2048M
+sudo cp -a ../user/build/firmware/. rootfs/lib/firmware/
+sudo rm -f rootfs.img && sudo mkfs.ext4 -F -L linuxroot -d rootfs rootfs.img 1024M
 sudo e2fsck -pf rootfs.img
 sudo resize2fs -M rootfs.img
