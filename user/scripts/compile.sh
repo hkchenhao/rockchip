@@ -45,10 +45,10 @@ cd build && sudo mkdir rootfs && sudo tar -xzpf /tmp/ubuntu-base-26.04-base-arm6
 #sudo apt-get install qemu-user-static && sudo cp /usr/bin/qemu-arm-static rootfs/usr/bin/
 sudo cp -b /etc/resolv.conf rootfs/etc/resolv.conf
 sudo mount -t proc /proc rootfs/proc && sudo mount -t sysfs /sys rootfs/sys && sudo mount -o bind /dev rootfs/dev && sudo mount -o bind /dev/pts rootfs/dev/pts
-sudo chroot rootfs
+sudo chroot rootfs /bin/bash && dpkg --print-architecture
 cat << EOF
-  apt update && apt upgrade
-  apt install sudo vim net-tools openssh-server
+  DEBIAN_FRONTEND=noninteractive apt update && DEBIAN_FRONTEND=noninteractive apt upgrade
+  DEBIAN_FRONTEND=noninteractive apt install sudo vim net-tools openssh-server
   passwd root
   rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/
   mkdir -p /lib/firmware
