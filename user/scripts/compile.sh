@@ -48,7 +48,7 @@ sudo mount -t proc /proc rootfs/proc && sudo mount -t sysfs /sys rootfs/sys && s
 sudo chroot rootfs /bin/bash && dpkg --print-architecture
 cat << EOF
   DEBIAN_FRONTEND=noninteractive apt update && DEBIAN_FRONTEND=noninteractive apt upgrade
-  DEBIAN_FRONTEND=noninteractive apt install sudo vim net-tools openssh-server
+  DEBIAN_FRONTEND=noninteractive apt install udev kmod sudo vim net-tools openssh-server
   passwd root
   rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/
   mkdir -p /lib/firmware
@@ -57,6 +57,20 @@ EOF
 sudo umount rootfs/dev/pts && sudo umount rootfs/dev && sudo umount rootfs/sys && sudo umount rootfs/proc
 sudo make -C ../kernel ARCH=arm64 modules_install INSTALL_MOD_PATH=rootfs
 sudo cp -a image/firmware/. rootfs/lib/firmware/
+
+# Expand ext4 to the rootfs:grow partition on boot (already-full filesystems are a no-op).
+# This grows the mounted root filesystem only; it does not change the partition table.
+sudo test -x rootfs/usr/lib/systemd/systemd-growfs
+sudo test -f rootfs/usr/lib/systemd/system/systemd-growfs-root.service
+sudo mkdir -p rootfs/etc/systemd/system/systemd-growfs-root.service.d \
+             rootfs/etc/systemd/system/local-fs.target.wants
+sudo tee rootfs/etc/systemd/system/systemd-growfs-root.service.d/order.conf >/dev/null <<'EOF'
+[Unit]
+Before=local-fs.target
+EOF
+sudo ln -sfn /usr/lib/systemd/system/systemd-growfs-root.service \
+    rootfs/etc/systemd/system/local-fs.target.wants/systemd-growfs-root.service
+
 sudo rm -f image/rootfs.img && sudo mkfs.ext4 -F -L linuxroot -d rootfs image/rootfs.img 1024M
 sudo e2fsck -pf image/rootfs.img
 sudo resize2fs -M image/rootfs.img
