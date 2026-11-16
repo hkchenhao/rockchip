@@ -1,5 +1,6 @@
 .idea
-build
+build/diagnostics
+build/image
 kernel
 loader
 uboot

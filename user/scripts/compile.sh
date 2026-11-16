@@ -42,6 +42,7 @@ cd -
 # Rootfs
 wget https://cdimage.ubuntu.com/ubuntu-base/releases/26.04/release/ubuntu-base-26.04-base-arm64.tar.gz -P /tmp
 cd build && sudo mkdir rootfs && sudo tar -xzpf /tmp/ubuntu-base-26.04-base-arm64.tar.gz -C rootfs
+# sudo sh tools/register_binfmt.sh
 #sudo apt-get install qemu-user-static && sudo cp /usr/bin/qemu-arm-static rootfs/usr/bin/
 sudo cp -b /etc/resolv.conf rootfs/etc/resolv.conf
 sudo mount -t proc /proc rootfs/proc && sudo mount -t sysfs /sys rootfs/sys && sudo mount -o bind /dev rootfs/dev && sudo mount -o bind /dev/pts rootfs/dev/pts
@@ -56,7 +57,7 @@ cat << EOF
 EOF
 sudo umount rootfs/dev/pts && sudo umount rootfs/dev && sudo umount rootfs/sys && sudo umount rootfs/proc
 sudo make -C ../kernel ARCH=arm64 modules_install INSTALL_MOD_PATH=rootfs
-sudo cp -a image/firmware/. rootfs/lib/firmware/
+sudo cp -a firmware/. rootfs/lib/firmware/
 
 # Expand ext4 to the rootfs:grow partition on boot (already-full filesystems are a no-op).
 # This grows the mounted root filesystem only; it does not change the partition table.
