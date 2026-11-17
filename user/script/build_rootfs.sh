@@ -19,9 +19,15 @@ cat << EOF
       network-manager wpasupplicant iproute2 net-tools iputils-ping \
       openssh-server ca-certificates curl \
       usb-modeswitch usbutils i2c-tools gpiod e2fsprogs \
-      build-essential python3 cmake pkg-config git
-  passwd root
+      build-essential python3 cmake pkg-config git \
+      stress memtester iperf3
   rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/
+
+  passwd root
+  echo ubuntu > /etc/hostname
+  echo 'LANG=C.UTF-8' > /etc/default/locale
+  ln -sfn /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
   exit
 EOF
 umount rootfs/dev/pts && umount rootfs/dev && umount rootfs/sys && umount rootfs/proc
@@ -32,7 +38,7 @@ cp -a --no-preserve=ownership ../user/overlay/. rootfs/
 
 # 4.Make image
 rm -f image/rootfs.img
-mkfs.ext4 -F -L linuxroot -d rootfs image/rootfs.img 1024M
+mkfs.ext4 -F -L linuxroot -d rootfs image/rootfs.img 2048M
 e2fsck -pf image/rootfs.img
 resize2fs -M image/rootfs.img
 
