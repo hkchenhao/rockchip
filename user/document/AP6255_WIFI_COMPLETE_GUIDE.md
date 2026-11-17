@@ -7474,7 +7474,7 @@ dmesg | grep PWRSEQ
 
 ---
 
-**文档位置**: `/root/projects/embedded/rockchip/rk3399/user/docs/`  
+**文档位置**: `/root/projects/embedded/rockchip/rk3399/user/document/`
 **最后更新**: 2026-02-28  
 **维护者**: Claude Code  
 **版本**: v2.0 (完整整合版)

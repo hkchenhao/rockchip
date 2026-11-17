@@ -10,7 +10,7 @@
 cd /Volumes/Embedded/rockchip
 python3 -m venv build/serial-venv
 build/serial-venv/bin/python -m pip install pyserial==3.5
-build/serial-venv/bin/python user/scripts/tools/serial_bridge.py
+build/serial-venv/bin/python user/tool/serial_bridge.py
 ```
 
 前两条环境准备命令只需首次执行。保持转发进程运行；Ctrl+C 停止。默认真实端口为 `/dev/cu.usbserial-11410`，物理波特率为 1500000；可用 `--port`、`--baud` 更改。
@@ -50,7 +50,7 @@ Ctrl+A 后按 D 可断开终端显示；重新进入使用 `screen -x rk3399-sha
 ## 验证
 
 ```sh
-PYTHONDONTWRITEBYTECODE=1 build/serial-venv/bin/python -m unittest discover -s user/scripts/tools -p test_serial_bridge.py
+PYTHONDONTWRITEBYTECODE=1 build/serial-venv/bin/python -m unittest discover -s user/tool -p test_serial_bridge.py
 ```
 
 测试使用模拟开发板的 PTY，覆盖输出广播、双方输入、断开重连以及退出清理，不操作真实开发板。

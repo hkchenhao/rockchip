@@ -1,0 +1,16 @@
+# USB peer Mac: 192.168.99.2/24, no router or DNS.
+[Match]
+MACAddress=02:33:99:00:00:01
+
+[Link]
+RequiredForOnline=no
+
+[Network]
+Address=192.168.99.1/24
+DHCP=no
+DHCPServer=no
+IPv6AcceptRA=no
+LinkLocalAddressing=no
+IPv4Forwarding=no
+IPv6Forwarding=no
+IPMasquerade=no
