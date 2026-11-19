@@ -7,21 +7,28 @@ tar -xzpf /tmp/ubuntu-base-26.04-base-arm64.tar.gz -C rootfs
 cp -b /usr/bin/qemu-aarch64-static rootfs/usr/bin/
 cp -b /etc/resolv.conf rootfs/etc/resolv.conf
 
-# 2.Chroot
+# 2.Install module and overlay
+make -C ../kernel ARCH=arm64 modules_install INSTALL_MOD_PATH="$PWD/rootfs"
+cp -a --no-preserve=ownership ../user/overlay/. rootfs/
+
+# 3.Chroot
 mount -t proc /proc rootfs/proc && mount -t sysfs /sys rootfs/sys && mount -o bind /dev rootfs/dev && mount -o bind /dev/pts rootfs/dev/pts
 chroot rootfs /bin/bash && dpkg --print-architecture
 cat << EOF
   DEBIAN_FRONTEND=noninteractive apt update
   DEBIAN_FRONTEND=noninteractive apt upgrade
   DEBIAN_FRONTEND=noninteractive apt install -y \
-      systemd systemd-sysv systemd-resolved systemd-timesyncd \
-      dbus udev kmod sudo zsh vim less tzdata\
-      network-manager wpasupplicant iproute2 net-tools iputils-ping \
+      ubuntu-minimal \
+      systemd-resolved systemd-timesyncd \
+      dbus zsh vim \
+      network-manager wpasupplicant net-tools \
       openssh-server ca-certificates curl \
-      usb-modeswitch usbutils i2c-tools gpiod e2fsprogs \
-      build-essential python3 cmake pkg-config git \
-      stress memtester iperf3
-  rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/
+      usb-modeswitch usbutils i2c-tools gpiod \
+      ocl-icd-libopencl1 \
+      build-essential cmake pkg-config git \
+      stress memtester iperf3 clinfo \
+      /tmp/*.deb
+  rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/* && rm -f /tmp/*.deb
 
   passwd root
   echo ubuntu > /etc/hostname
@@ -31,10 +38,6 @@ cat << EOF
   exit
 EOF
 umount rootfs/dev/pts && umount rootfs/dev && umount rootfs/sys && umount rootfs/proc
-
-# 3.Install module and overlay
-make -C ../kernel ARCH=arm64 modules_install INSTALL_MOD_PATH="$PWD/rootfs"
-cp -a --no-preserve=ownership ../user/overlay/. rootfs/
 
 # 4.Make image
 rm -f image/rootfs.img
