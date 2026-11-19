@@ -19,14 +19,9 @@ cat << EOF
   DEBIAN_FRONTEND=noninteractive apt upgrade
   DEBIAN_FRONTEND=noninteractive apt install -y \
       ubuntu-minimal \
-      systemd-resolved systemd-timesyncd \
-      dbus zsh vim \
-      network-manager wpasupplicant net-tools \
-      openssh-server ca-certificates curl \
-      usb-modeswitch usbutils i2c-tools gpiod \
-      ocl-icd-libopencl1 \
-      build-essential cmake pkg-config git \
-      stress memtester iperf3 clinfo \
+      zsh curl wget git cmake build-essential pkgconf \
+      net-tools network-manager openssh-server rfkill iperf3 \
+      usb-modeswitch usbutils pciutils alsa-utils i2c-tools bluez gpiod evtest \
       /tmp/*.deb
   rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/* && rm -f /tmp/*.deb
 
