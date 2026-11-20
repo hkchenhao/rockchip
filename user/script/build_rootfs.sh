@@ -11,8 +11,8 @@ cp ../user/package/*.deb rootfs/tmp/
 # 2.Chroot
 mount -t proc /proc rootfs/proc && mount -t sysfs /sys rootfs/sys && mount -o bind /dev rootfs/dev && mount -o bind /dev/pts rootfs/dev/pts
 chroot rootfs /bin/bash && dpkg --print-architecture
-cat << EOF
-  export LANG=C.UTF-8
+cat <<'EOF'
+  export LANG=C.UTF-8 LC_ALL=C.UTF-8
   DEBIAN_FRONTEND=noninteractive apt update
   DEBIAN_FRONTEND=noninteractive apt upgrade
   DEBIAN_FRONTEND=noninteractive apt install -y \
