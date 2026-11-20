@@ -17,7 +17,7 @@ cat << EOF
   DEBIAN_FRONTEND=noninteractive apt upgrade
   DEBIAN_FRONTEND=noninteractive apt install -y \
       ubuntu-minimal \
-      zsh curl wget tree git cmake build-essential pkgconf \
+      zsh curl wget vim tree git cmake build-essential pkgconf \
       net-tools network-manager openssh-server rfkill iperf3 \
       usb-modeswitch usbutils pciutils alsa-utils i2c-tools bluez gpiod evtest \
       /tmp/*.deb
@@ -27,6 +27,13 @@ cat << EOF
   echo ubuntu > /etc/hostname
   echo 'LANG=C.UTF-8' > /etc/default/locale
   ln -sfn /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+  #  chsh -s /bin/zsh
+  #  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  #  git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+  #  git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+  #  vim ~/.zshrc
+  #  plugins=(git extract z zsh-autosuggestions zsh-syntax-highlighting)
 
   exit
 EOF
@@ -38,7 +45,7 @@ cp -a --no-preserve=ownership ../user/overlay/. rootfs/
 
 # 4.Make image
 rm -f image/rootfs.img
-mkfs.ext4 -F -L linuxroot -d rootfs image/rootfs.img 2048M
+mkfs.ext4 -F -L linuxroot -d rootfs image/rootfs.img 4096M
 e2fsck -pf image/rootfs.img
 resize2fs -M image/rootfs.img
 
