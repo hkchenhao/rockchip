@@ -1,0 +1,14 @@
+[Unit]
+Description=USB gadget configuration
+Requires=sys-kernel-config.mount
+After=sys-kernel-config.mount systemd-networkd.service
+Wants=systemd-networkd.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/gt load usb-gadget.scheme usb-gadget --off
+ExecStart=/bin/sh -ec 'serial=; if [ -r /proc/device-tree/serial-number ]; then serial=$$(tr -d "\\000\\n" < /proc/device-tree/serial-number); fi; [ -n "$$serial" ] || serial=%m; exec /usr/bin/gt set usb-gadget serialnumber="$$serial"'
+ExecStart=/bin/sh -ec 'echo super-speed > /sys/kernel/config/usb_gadget/usb-gadget/max_speed'
+ExecStart=/usr/bin/gt enable usb-gadget
+ExecStopPost=-/usr/bin/gt rm -rf usb-gadget

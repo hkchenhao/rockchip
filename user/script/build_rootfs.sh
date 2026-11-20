@@ -4,22 +4,20 @@
 cd build
 wget https://cdimage.ubuntu.com/ubuntu-base/releases/26.04/release/ubuntu-base-26.04-base-arm64.tar.gz -P /tmp
 tar -xzpf /tmp/ubuntu-base-26.04-base-arm64.tar.gz -C rootfs
-cp -b /usr/bin/qemu-aarch64-static rootfs/usr/bin/
-cp -b /etc/resolv.conf rootfs/etc/resolv.conf
+cp /usr/bin/qemu-aarch64-static rootfs/usr/bin/ # The develop not need to execute
+cp /etc/resolv.conf rootfs/etc/resolv.conf
+cp ../user/package/*.deb rootfs/tmp/
 
-# 2.Install module and overlay
-make -C ../kernel ARCH=arm64 modules_install INSTALL_MOD_PATH="$PWD/rootfs"
-cp -a --no-preserve=ownership ../user/overlay/. rootfs/
-
-# 3.Chroot
+# 2.Chroot
 mount -t proc /proc rootfs/proc && mount -t sysfs /sys rootfs/sys && mount -o bind /dev rootfs/dev && mount -o bind /dev/pts rootfs/dev/pts
 chroot rootfs /bin/bash && dpkg --print-architecture
 cat << EOF
+  export LANG=C.UTF-8
   DEBIAN_FRONTEND=noninteractive apt update
   DEBIAN_FRONTEND=noninteractive apt upgrade
   DEBIAN_FRONTEND=noninteractive apt install -y \
       ubuntu-minimal \
-      zsh curl wget git cmake build-essential pkgconf \
+      zsh curl wget tree git cmake build-essential pkgconf \
       net-tools network-manager openssh-server rfkill iperf3 \
       usb-modeswitch usbutils pciutils alsa-utils i2c-tools bluez gpiod evtest \
       /tmp/*.deb
@@ -33,6 +31,10 @@ cat << EOF
   exit
 EOF
 umount rootfs/dev/pts && umount rootfs/dev && umount rootfs/sys && umount rootfs/proc
+
+# 3.Install module and overlay
+make -C ../kernel ARCH=arm64 modules_install INSTALL_MOD_PATH="$PWD/rootfs"
+cp -a --no-preserve=ownership ../user/overlay/. rootfs/
 
 # 4.Make image
 rm -f image/rootfs.img
